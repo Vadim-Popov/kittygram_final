@@ -22,7 +22,7 @@ services:
     image: negative777/kittygram_frontend
     command: cp -r /app/build/. /static/
     volumes:
-      - static:/static
+      - static:/backend_static/
   gateway:
     image: negative777/kittygram_gateway
     env_file: .env

@@ -87,9 +87,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = os.getenv('TIMEZONE')
-if TIME_ZONE is None:
-    TIME_ZONE = 'UTC'
+TIME_ZONE = os.getenv('TIMEZONE', 'UTC')
 
 USE_I18N = True
 

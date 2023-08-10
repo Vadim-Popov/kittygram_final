@@ -135,7 +135,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     needs: 
-      # Дождёмся билда всех образов Taski
+      # Дождёмся билда всех образов kittygram
       - build_and_push_to_docker_hub
       - build_frontend_and_push_to_docker_hub
       - build_gateway_and_push_to_docker_hub
@@ -152,7 +152,7 @@ jobs:
         key: ${{ secrets.SSH_KEY }}
         passphrase: ${{ secrets.SSH_PASSPHRASE }}
         source: "docker-compose.production.yml"
-        target: "taski"
+        target: "kittygram"
     - name: Executing remote ssh commands to deploy
       uses: appleboy/ssh-action@master
       with:
@@ -173,7 +173,7 @@ jobs:
           # Выполняет миграции и сбор статики
           sudo docker compose -f docker-compose.production.yml exec backend python manage.py migrate
           sudo docker compose -f docker-compose.production.yml exec backend python manage.py collectstatic
-          sudo docker compose -f docker-compose.production.yml exec backend cp -r /app/collected_static/. /backend_static/static/ 
+          sudo docker compose -f docker-compose.production.yml exec backend cp -r /app/collected_static/. /backend_static/
   send_message:
       runs-on: ubuntu-latest
       needs: deploy
@@ -183,4 +183,4 @@ jobs:
         with:
           to: ${{ secrets.TELEGRAM_TO }}
           token: ${{ secrets.TELEGRAM_TOKEN }}
-          message: Деплой успешно выполнен!
+          message: Деплой успешно выполнен!!!

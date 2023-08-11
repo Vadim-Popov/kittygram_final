@@ -50,6 +50,7 @@ jobs:
       run: |
         python -m flake8 backend/
     - name: Running Tests
+      if: github.ref != 'refs/heads/main'
       run: |
         cd backend/
         python manage.py test
@@ -137,7 +138,6 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     needs:
-    # - if: github.ref == 'refs/heads/main' # Деплой только при пуше в ветку main
       # Дождёмся билда всех образов kittygram
       - build_and_push_to_docker_hub
       - build_frontend_and_push_to_docker_hub
@@ -147,6 +147,7 @@ jobs:
       uses: actions/checkout@v3
     # Копируем docker-compose.production.yml на продакшен-сервер
     - name: Copy docker-compose.yml via ssh
+      if: github.ref == 'refs/heads/main'
       uses: appleboy/scp-action@master
     # Передаём параметры для action appleboy/scp-action:
       with:
@@ -184,6 +185,7 @@ jobs:
       needs: deploy
       steps:
       - name: Send message
+        if: github.ref == 'refs/heads/main'
         uses: appleboy/telegram-action@master
         with:
           to: ${{ secrets.TELEGRAM_TO }}

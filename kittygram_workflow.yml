@@ -49,14 +49,10 @@ jobs:
         DB_PORT: 5432
       run: |
         python -m flake8 backend/
+    - name: Running Tests
+      run: |
         cd backend/
         python manage.py test
-    #   run: |
-    #     python -m flake8 backend/
-    # - name: Run Test
-    #   run: |
-    #     cd backend/
-    #     python manage.py test
   
   build_and_push_to_docker_hub:
     name: Push Docker image to DockerHub
@@ -140,12 +136,12 @@ jobs:
           tags: negative777/kittygram_gateway:latest
   deploy:
     runs-on: ubuntu-latest
-    needs: 
+    needs:
+    if: github.ref == 'refs/heads/main' # Деплой только при пуше в ветку main
       # Дождёмся билда всех образов kittygram
       - build_and_push_to_docker_hub
       - build_frontend_and_push_to_docker_hub
       - build_gateway_and_push_to_docker_hub
-    if: github.ref == 'refs/heads/main' # Деплой только при пуше в ветку main
     steps:
     - name: Checkout repo
       uses: actions/checkout@v3
